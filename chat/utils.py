@@ -44,6 +44,16 @@ class MessagingService(object):
         """
         return Message.objects.all().filter(recipient=user, read_at=None)
 
+    def get_unread_btw_users(self, user1, user2):
+        """
+        Number of unreade messages between two users
+        e.g a user gets the number of unread messages he has recived from another user
+        :param user1, user2: User
+        """
+        count = Message.objects.all().filter(sender=user2, recipient=user1, read_at=None).count()
+        return count
+
+
     def read_message(self, message_id):
         """
         Read specific message
@@ -122,8 +132,8 @@ class MessagingService(object):
 
         if mark_read:
             for message in conversation:
-                # Just to be sure, everything is read
-                self.mark_as_read(message)
+                if message.sender != user1:
+                    self.mark_as_read(message)
 
         return conversation
 
@@ -139,3 +149,12 @@ class MessagingService(object):
             message_read.send(sender=message, from_user=message.sender, to=message.recipient)
             message.save()
 
+    def get_last_message(self, user1, user2):
+        """
+        Get the last message instance between two chating parties
+        :param user1: User
+        :param user2: User
+        """
+        users = [user1, user2]
+        conversation = Message.objects.all().filter(sender__in=users, recipient__in=users)
+        return conversation.last()

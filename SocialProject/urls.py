@@ -20,6 +20,7 @@ from django.conf.urls import url
 
 urlpatterns = [
     # url(r"^$", gpViews.home, name="home"),
+    url('', include('chat.urls')),
     url('', include('accounts.urls')),
     path('admin/', admin.site.urls),
 ]

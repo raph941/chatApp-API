@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'channels',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -84,6 +85,7 @@ TEMPLATES = [
 
 
 WSGI_APPLICATION = 'SocialProject.wsgi.application'
+ASGI_APPLICATION = "SocialProject.router.application"
 
 
 # Database
@@ -164,7 +166,8 @@ MESSAGE_TAGS = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authtoken'
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
