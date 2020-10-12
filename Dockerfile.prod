@@ -1,0 +1,36 @@
+# Builder image
+FROM python:3.8.3-alphine as builder
+
+WORKDIR /home/raphael/tempContainer
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+COPY ./requirements.txt ./Pipfile /home/raphael/chatAppContainer/
+
+# install dependencies
+RUN apk update && \
+    apk add --virtual .build-deps \
+    ca-certificates gcc postgresql-dev linux-headers musl-dev \
+    libffi-dev jpeg-dev zlib-dev \
+    git bash
+
+#Lint for code style
+RUN pip install --upgrade pip
+RUN pip install flake8
+COPY . .
+RUN flake8 --ignore=E501, F401 .
+
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
+
+
+#FINAL IMAGE
+FROM python:3.8.3-alpine
+WORKDIR /home/raphael/chatAppContainer
+
+#install dependencies
+RUN apk update and libpq
+COPY --from=builder /home/raphael/tempContainer/wheels /wheels
+COPY --from=builder /home/raphael/tempContainer/requirements.txt .
+COPY . $WORKDIR
+
+# run entrypoint.prod.sh
+ENTRYPOINT [ "./entrypoint.prod.sh" ]

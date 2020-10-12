@@ -1,0 +1,6 @@
+version: 2
+jobs:
+    build:
+        working_dir: ~/circle-chatApp
+        docker: 
+            - image: circleci/python:3.8

@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from .models import Message, ChatRoom
+from accounts.models import User
 from .signals import message_read, message_sent
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -22,9 +23,12 @@ class MessagingService(object):
         :param message: String
         :return: Message and status code
         """
-
         if sender == recipient:
             raise ValidationError("You can't send messages to yourself.")
+
+        if type(sender) == int and type(recipient) == int:
+            sender = User.objects.get(pk=sender)
+            recipient = User.objects.get(pk=recipient)
         room, created = ChatRoom.objects.get_or_new(sender, recipient)
 
         message = Message(sender=sender, recipient=recipient, content=str(message), room=room)
@@ -102,8 +106,18 @@ class MessagingService(object):
 
     #conversation room
     def get_conversation_room(self, user1, user2):
-        users = [user1, user2]
-        room = ChatRoom.objects.all().filter(user1__in=users, user2__in=users)
+        """
+        Chat room for two users
+        user1 : int or object
+        user2 : int or object
+        """
+        if type(user1) == int and type(user2) == int:
+            u1 = User.objects.get(pk=user1)
+            u2 = User.objects.get(pk=user2)
+            users = [ u1, u2 ]
+        else: users = [user1, user2]
+
+        room = ChatRoom.objects.all().filter(first__in=users, second__in=users)[0]
         return room
     
 

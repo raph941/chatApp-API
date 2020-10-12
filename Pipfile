@@ -15,6 +15,7 @@ sqlparse = "==0.3.1"
 whitenoise = "==5.2.0"
 pillow = "*"
 channels = "*"
+channels-redis = "*"
 
 [dev-packages]
 

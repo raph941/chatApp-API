@@ -1,0 +1,43 @@
+version: "3"
+
+services: 
+    web:
+        restart: always
+        build: 
+            context: .
+            dockerfile: ./Dockerfile
+        command: python ./manage.py runserver 0.0.0.0:8000
+        volumes: 
+            - ./:/home/raphael/chatAppContainer
+        ports: 
+            - 8000:8000
+        env_file: 
+            - ./.env
+        depends_on:
+            - db
+            - redis
+    db:
+        image: postgres
+        volumes: 
+            - postgres_data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=chatApp_db
+    redis:
+        restart: 'on-failure'
+        image: "redis"
+        ports: 
+            - '127.0.0.1:6379:6379'
+        command: ["redis-server", "--bind", "redis"]
+    # daphne:
+    #     build: .
+    #     command: daphne SocialProject.asgi:application --port $PORT --bind 0.0.0.0
+    #     ports: 
+    #         - "8000:8000"
+    #     environment: 
+    #         - REDIS_HOST=redis
+    #     depends_on: 
+    #         - redis
+volumes: 
+    postgres_data: {}
