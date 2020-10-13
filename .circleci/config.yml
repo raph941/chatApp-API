@@ -12,14 +12,9 @@ jobs:
       - checkout
       - restore_cache:
           key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - run: 
-          name: Install App Dependencies
-          command: |
-            pip install virtualenv
-            virtualenv venv
-            source venv/bin/activate
-            pip install -r requirements.txt
-            echo "done installing dependencies"
+      - run: pip install pipenv
+      - run: pipenv shell
+      - run: pipenv install --skip-lock
       - save_cache:
           key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
