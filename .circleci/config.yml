@@ -14,14 +14,13 @@ jobs:
       - checkout
       - restore_cache:
           key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - run: pip install pipenv
-      - run: pipenv install --skip-lock
+      - run: pip install -r requirements.txt
       - save_cache:
           key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - '~/venv'
-      - run: pipenv run "python manage.py makemigrations"
-      - run: pipenv run "python manage.py migrate"
+      - run: python manage.py makemigrations
+      - run: python manage.py migrate
       - run:
           name: Run Unit Tests
           command: |
