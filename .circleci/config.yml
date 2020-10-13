@@ -15,16 +15,15 @@ jobs:
       - run: 
           name: Install App Dependencies
           command: |
-            pip install pipenv
-            pipenv --python 3.8
-            pipenv shell
-            echo "done activating the shell"
-            pipenv install
+            pip install virtualenv
+            virtualenv venv
+            source .venv/bin/activate
+            pip install -r requirements.txt
             echo "done installing dependencies"
       - save_cache:
           key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
-            - 'venv'
+            - '~/venv'
       - run:
           name: Run Unit Tests
           command: |
