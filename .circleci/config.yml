@@ -4,6 +4,8 @@ jobs:
     parallelism: 1
     docker:
       - image: circleci/python:3.8
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
       - image: circleci/postgres
         environment:
           POSTGRES_USER: $SQL_USER
