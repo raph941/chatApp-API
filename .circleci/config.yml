@@ -22,7 +22,7 @@ jobs:
           name: Virtual Environment Runs
           command: |
             sudo pip install pipenv
-            pipenv install
+            pipenv install -r requirements.txt
       - run:
           name: Database runs
           command: |
