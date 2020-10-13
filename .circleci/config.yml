@@ -4,7 +4,6 @@ jobs:
     docker:
       - image: circleci/python:3.8
       - image: circleci/postgres
-    working_directory: ~/
     steps:
       - checkout
       - restore_cache:
