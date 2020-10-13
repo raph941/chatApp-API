@@ -19,12 +19,20 @@ jobs:
           key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - '~/venv'
-      - run: python manage.py makemigrations
-      - run: python manage.py migrate
+      - run:
+          name: Virtual Environment Runs
+          command: |
+            sudo pip install pipenv
+            pipenv install
+      - run:
+          name: Database runs
+          command: |
+            pipenv run python manage.py makemigrations
+            pipenv run python manage.py migrate
       - run:
           name: Run Unit Tests
           command: |
-            pipenv run "python manage.py test"
+            pipenv run python manage.py test
 workflows:
   my_workflow:
     jobs:
