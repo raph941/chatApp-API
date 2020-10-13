@@ -5,8 +5,7 @@ jobs:
       - image: circleci/python:3.8
       - image: circleci/postgres
     environment:
-      POSTGRES_USER: 'postgres_user'
-      POSTGRES_PASSWORD: 'postgres_pass'
+      POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
       - restore_cache:
