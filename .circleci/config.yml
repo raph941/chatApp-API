@@ -31,8 +31,8 @@ jobs:
           command: |
             python  manage.py test
 workflows:
-  main:
+  my_workflow:
     jobs:
-      - build
+      - build:
           context: 
             - chatAppContext
