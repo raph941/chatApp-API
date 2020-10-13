@@ -34,4 +34,5 @@ workflows:
   main:
     jobs:
       - build
-          context: "chatAppContext"
+          context: 
+            - chatAppContext
