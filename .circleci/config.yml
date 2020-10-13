@@ -1,21 +1,26 @@
-version: 2.1
-
-orbs:
-  python: circleci/python@0.2.1
-
+version: 2
 jobs:
-  build-and-test:
-    executor: python/default
+  build-job:
+    docker:
+      - image: circleci/python:3.8
+      - image: circleci/postgres
+    working_directory: ~/
     steps:
       - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
+      - restore_cache:
+          key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - run: 
+          name: Install App Dependencies
+          command: |
+            pip install pipenv
+            pipenv --python3.8
+            pipenv shell
+            pipenv install
+      - save_cache:
+          key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - 'venv'
       - run:
-          command: ./manage.py test
-          name: Test
-
-workflows:
-  main:
-    jobs:
-      - build-and-test
+          name: Run unit tests
+          command: |
+            python  manage.py test
