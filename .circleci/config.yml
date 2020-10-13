@@ -12,12 +12,6 @@ jobs:
           POSTGRES_PASSWORD: $SQL_PASSWORD
     steps:
       - checkout
-      - restore_cache:
-          key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - save_cache:
-          key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
-          paths:
-            - '~/venv'
       - run:
           name: Virtual Environment Runs
           command: |
