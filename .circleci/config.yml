@@ -8,6 +8,9 @@ jobs:
       - checkout
       - restore_cache:
           key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - run:
+          name: Test runs
+          command: echo $SECRET_KEY
       - run: 
           name: Install App Dependencies
           command: |
