@@ -4,6 +4,9 @@ jobs:
     docker:
       - image: circleci/python:3.8
       - image: circleci/postgres
+    environment:
+      POSTGRES_USER: 'postgres_user'
+      POSTGRES_PASSWORD: 'postgres_pass'
     steps:
       - checkout
       - restore_cache:
@@ -19,11 +22,11 @@ jobs:
             pipenv --python 3.8
             pipenv shell
             pipenv install
-      - save_cache:
-          key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
-          paths:
-            - 'venv'
+      # - save_cache:
+      #     key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      #     paths:
+      #       - 'venv'
       - run:
-          name: Run unit tests
+          name: Run Unit Tests
           command: |
             python  manage.py test
