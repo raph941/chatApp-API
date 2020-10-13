@@ -5,15 +5,12 @@ jobs:
       - image: circleci/python:3.8
       - image: circleci/postgres
         environment:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: $SQL_USER
+          POSTGRES_PASSWORD: $SQL_PASSWORD
     steps:
       - checkout
       - restore_cache:
           key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - run:
-          name: Test runs
-          command: echo $SECRET_KEY
       - run: 
           name: Install App Dependencies
           command: |
@@ -22,14 +19,14 @@ jobs:
             pipenv --python 3.8
             pipenv shell
             pipenv install
-      # - save_cache:
-      #     key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      #     paths:
-      #       - 'venv'
+      - save_cache:
+          key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - 'venv'
       - run:
           name: Run Unit Tests
           command: |
-            python  manage.py test
+            python manage.py test
 workflows:
   my_workflow:
     jobs:
