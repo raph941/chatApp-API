@@ -19,10 +19,6 @@ jobs:
             pipenv --python 3.8
             pipenv shell
             pipenv install
-      - save_cache:
-          key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
-          paths:
-            - 'venv'
       - run:
           name: Run Unit Tests
           command: |
