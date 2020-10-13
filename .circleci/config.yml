@@ -4,8 +4,9 @@ jobs:
     docker:
       - image: circleci/python:3.8
       - image: circleci/postgres
-    environment:
-      POSTGRES_HOST_AUTH_METHOD: trust
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
     steps:
       - checkout
       - restore_cache:
@@ -29,3 +30,8 @@ jobs:
           name: Run Unit Tests
           command: |
             python  manage.py test
+workflows:
+  main:
+    jobs:
+      - build
+          context: chatAppContext
