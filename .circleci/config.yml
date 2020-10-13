@@ -14,7 +14,6 @@ jobs:
       - checkout
       - restore_cache:
           key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - run: pip install -r requirements.txt
       - save_cache:
           key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
