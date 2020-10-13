@@ -23,7 +23,7 @@ jobs:
       - run:
           name: Run Unit Tests
           command: |
-            python manage.py test
+            pipenv run "python manage.py test"
 workflows:
   my_workflow:
     jobs:
