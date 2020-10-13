@@ -13,7 +13,6 @@ jobs:
       - restore_cache:
           key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run: pip install pipenv
-      - run: pipenv shell
       - run: pipenv install --skip-lock
       - save_cache:
           key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
