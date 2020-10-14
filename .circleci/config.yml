@@ -53,6 +53,6 @@ workflows:
             - run: 
                 name: Database migration runs
                 command: |
-                  heroku run python manage.py makemigrations
-                  heroku run python manage.py migrate
+                  heroku run python manage.py makemigrations -a $HEROKU_APP_NAME
+                  heroku run python manage.py migrate -a $HEROKU_APP_NAME
           
