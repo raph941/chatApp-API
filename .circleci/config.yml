@@ -2,38 +2,6 @@ version: 2.1
 orbs:
   heroku: circleci/heroku@1.2.2
 jobs:
-  build:
-    parallelism: 1
-    docker:
-      - image: circleci/python:3.8
-        environment:
-          PIPENV_VENV_IN_PROJECT: true
-      - image: circleci/postgres
-        environment:
-          POSTGRES_USER: $SQL_USER
-          POSTGRES_PASSWORD: $SQL_PASSWORD
-    steps:
-      - checkout
-      - restore_cache:
-          key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - run:
-          name: Virtual Environment Runs
-          command: |
-            sudo pip install pipenv
-            pipenv install -r requirements.txt
-      - save_cache:
-          key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
-          paths:
-            - 'venv'
-      - run:
-          name: Database runs
-          command: |
-            pipenv run python manage.py makemigrations
-            pipenv run python manage.py migrate
-      - run:
-          name: Run Unit Tests
-          command: |
-            pipenv run python manage.py test
   deploy:
     executor: heroku/default
     steps:
@@ -47,7 +15,4 @@ jobs:
 workflows:
   my_workflow:
     jobs:
-      - build:
-          context: 
-            - chatAppContext
       - deploy
