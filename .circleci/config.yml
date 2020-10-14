@@ -45,6 +45,8 @@ workflows:
           filters:
             branches:
               only: master
+          context: 
+            - chatAppContext
           
         
           
