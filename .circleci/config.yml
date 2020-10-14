@@ -14,11 +14,17 @@ jobs:
           POSTGRES_PASSWORD: $SQL_PASSWORD
     steps:
       - checkout
+      - restore_cache:
+        key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           name: Virtual Environment Runs
           command: |
             sudo pip install pipenv
             pipenv install -r requirements.txt
+      - save_cache:
+          key: chatApp-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - 'venv'
       - run:
           name: Database runs
           command: |
