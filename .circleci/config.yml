@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  heroku: circleci/heroku@x.y
 jobs:
   build:
     parallelism: 1
@@ -26,9 +28,19 @@ jobs:
           name: Run Unit Tests
           command: |
             pipenv run python manage.py test
+  deploy:
+      - heroku/deploy-via-git:
+          post-steps:
+            - run: echo "POST STEPS"
+          pre-steps:
+            - run: echo "PRE STEPS"
+
+
+      
 workflows:
   my_workflow:
     jobs:
       - build:
           context: 
             - chatAppContext
+      - deploy:
