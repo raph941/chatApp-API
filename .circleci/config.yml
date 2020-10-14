@@ -42,11 +42,17 @@ workflows:
           context: 
             - chatAppContext
       - heroku/deploy-via-git:
+          requires:
+            - build
           filters:
             branches:
               only: master
           context: 
-            - chatAppContext
-          
-        
+            - chatAppContext    
+          post-steps:
+            - run: 
+                name: Database migration runs
+                command: |
+                  heroku run python manage.py makemigrations
+                  heroku run python manage.py migrate
           
