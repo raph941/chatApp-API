@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  heroku: circleci/heroku@x.y
+  heroku: circleci/heroku@1.2.2
 jobs:
   build:
     parallelism: 1
@@ -29,13 +29,14 @@ jobs:
           command: |
             pipenv run python manage.py test
   deploy:
-      - heroku/deploy-via-git:
-          post-steps:
-            - run: echo "POST STEPS"
-          pre-steps:
-            - run: echo "PRE STEPS"
-
-
+    executor: heroku/default
+    steps:
+      - checkout
+      - heroku/install
+      - run:
+          command: |
+            echo "Hello world"
+      - heroku/deploy-via-git
       
 workflows:
   my_workflow:
@@ -43,4 +44,4 @@ workflows:
       - build:
           context: 
             - chatAppContext
-      - deploy:
+      - deploy
