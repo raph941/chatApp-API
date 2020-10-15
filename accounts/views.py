@@ -75,16 +75,18 @@ class CustomLoginView(LoginView):
     
     def post(self, request, *args, **kwargs):
         
-        # data = json.loads(request.body.decode())
-        # username = data.get('username')
-        # password = data.get('password')
+        data = json.loads(request.body.decode())
+        username = data.get('username')
+        password = data.get('password')
+        user = authenticate(username=username, password=password)
+
+        # username = request.POST.get('username')
+        # password = request.POST.get('password')
+        # logger.info("username: ", username)
+        # logger.info("password: ", password)
+        # import pdb ; pdb.set_trace()
         # user = authenticate(username=username, password=password)
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
-        # import pdb ; pdb.set_trace()
-        logger.warning("THE THRESHING FLOOR")
         if user is not None:
             logger.info("USER WAS AUTHENTICATD SUCCESSFULLY")
             if user.is_active:
