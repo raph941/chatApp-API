@@ -121,7 +121,7 @@ class MessagingService(object):
         return room
     
 
-    def get_conversation(self, user1, user2, limit=None):
+    def get_conversation(self, user1, user2, limit=None, reversed=False):
         """
         List of messages between two users
         :param user1: User
@@ -132,7 +132,13 @@ class MessagingService(object):
         """
         users = [user1, user2]
 
-        conversation = Message.objects.filter(sender__in=users, recipient__in=users)
+        # Newest message first if it's reversed (index 0)
+        if reversed:
+            order = '-pk'
+        else:
+            order = 'pk'
+
+        conversation = Message.objects.filter(sender__in=users, recipient__in=users).order_by(order)
 
         if limit:
             # Limit number of messages to the x newest
@@ -140,7 +146,6 @@ class MessagingService(object):
 
         for message in conversation:
             if message.sender==user2 and message.read_at==None:
-                print('got here bitches')
                 self.mark_as_read(message)
 
         return conversation

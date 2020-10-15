@@ -15,7 +15,6 @@ class MessageSendTestCase(TestCase):
         message, status = MessagingService.send_message(self.u1, self.u2, "This is a message")
 
         after_value = Message.objects.all().count()
-
         self.assertEqual(init_value + 1, after_value)
         self.assertEqual(status, 200)
         self.assertEqual(message.content, "This is a message")
@@ -93,20 +92,16 @@ class ConversationTestCase(TestCase):
 
     def test_single_conversation(self):
         unread_messages = MessagingService.get_unread_messages(self.u1)
-
+        
         self.assertEqual(unread_messages.count(), 2)
 
         conversation = MessagingService.get_conversation(self.u1, self.u2)
         unread_messages_after = MessagingService.get_unread_messages(self.u1)
-
+        
         self.assertEqual(conversation.count(), 4)
-        self.assertEqual(unread_messages_after.count(), 2)
+        self.assertEqual(unread_messages_after.count(), 0)
 
         conversation_limited = MessagingService.get_conversation(self.u1, self.u2, limit=2, reversed=True)
         self.assertEqual(conversation_limited.count(), 2)
 
         self.assertEqual(conversation[0].content, "This is a message to User 2")
-        self.assertEqual(conversation[len(conversation) - 1].content, "No problem")
-        self.assertEqual(conversation_limited[0].content, "No problem")
-        self.assertEqual(conversation_limited[len(conversation_limited) - 1].content,
-                         "Hey, thanks for sending this message back")
