@@ -68,15 +68,14 @@ class CustomLoginView(LoginView):
     
     def post(self, request, *args, **kwargs):
         
-        data = json.loads(request.body.decode())
-        username = data.get('username')
-        password = data.get('password')
-        user = authenticate(username=username, password=password)
-
-        # username = request.POST.get('username')
-        # password = request.POST.get('password')
-        # import pdb ; pdb.set_trace()
+        # data = json.loads(request.body.decode())
+        # username = data.get('username')
+        # password = data.get('password')
         # user = authenticate(username=username, password=password)
+
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
 
         if user is not None:
             if user.is_active:
