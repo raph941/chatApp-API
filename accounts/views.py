@@ -25,7 +25,12 @@ class usersListView(ListCreateAPIView):
     serializer_class = UsersSerializer
     queryset = User.objects.all()
     lookup_field = 'pk'
-    
+
+    def perform_create(self, serializer):
+        # import pdb ; pdb.set_trace()
+        username = serializer.validated_data.get('username')
+        password = serializer.validated_data.get('password')
+        User.objects.create_user(username=username, password=password)    
 
 class searchUserView(ListAPIView):
     '''gets a list of user, or create a new user''' 
@@ -76,7 +81,6 @@ class CustomLoginView(LoginView):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
-
         if user is not None:
             if user.is_active:
                 try:
