@@ -1,21 +1,19 @@
-# from django.test import TestCase
-import unittest
-from fractions import Fraction
+from django.test import TestCase
+from accounts.models import User
+from django.contrib.auth import authenticate
 
-# Create your tests here.
-class SumTest(unittest.TestCase):
 
-    def test_sum(self):
-        self.assertEqual(sum([1, 2, 3]), 6, "should be 6")
+class UserTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(username='user', password='user_pass', email="user@email.com", fullname="John Doe", image_url='')
+        
+    def test_user_properties(self):
+        username = self.user.username
+        email = self.user.email
+        fullname = self.user.fullname
+        imageUrl = self.user.image_url
 
-    def test_list_fraction(self):
-        data = [Fraction(1,4), Fraction(1,4), Fraction(2,5)]
-        result = sum(data)
-
-    def test_bad_type(self):
-        data = "banana"
-        with self.assertRaises(TypeError):
-            result = sum(data)
-
-if __name__ == "__main__":
-    unittest.main()
+        self.assertEqual(username, 'user')
+        self.assertEqual(email, 'user@email.com')
+        self.assertEqual(fullname, 'John Doe')
+        self.assertEqual(imageUrl, '')

@@ -67,5 +67,6 @@ class Message(models.Model):
             raise ValidationError("You can't send messages to yourself")
 
         if not self.id:
-            self.sent_at = datetime.datetime.now()
+            self.sent_at = timezone.now()
+            # import pdb ; pdb.set_trace()
         super(Message, self).save(**kwargs)

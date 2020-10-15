@@ -14,7 +14,6 @@ class MessagingService(object):
     """
 
     # Message creation
-
     def send_message(self, sender, recipient, message):
         """
         Send a new message
@@ -50,11 +49,12 @@ class MessagingService(object):
 
     def get_unread_btw_users(self, user1, user2):
         """
-        Number of unreade messages between two users
+        Number of unread messages between two users
         e.g a user gets the number of unread messages he has recived from another user
         :param user1, user2: User
         """
-        count = Message.objects.all().filter(sender=user2, recipient=user1, read_at=None).count()
+        count = Message.objects.filter(sender=user2, recipient=user1, read_at=None).count()
+        print('hrer')
         return count
 
 
@@ -121,7 +121,7 @@ class MessagingService(object):
         return room
     
 
-    def get_conversation(self, user1, user2, limit=None, reversed=False, mark_read=False):
+    def get_conversation(self, user1, user2, limit=None):
         """
         List of messages between two users
         :param user1: User
@@ -132,22 +132,16 @@ class MessagingService(object):
         """
         users = [user1, user2]
 
-        # Newest message first if it's reversed (index 0)
-        if reversed:
-            order = '-pk'
-        else:
-            order = 'pk'
-
-        conversation = Message.objects.all().filter(sender__in=users, recipient__in=users).order_by(order)
+        conversation = Message.objects.filter(sender__in=users, recipient__in=users)
 
         if limit:
             # Limit number of messages to the x newest
-            conversation = conversation[:limit]
+            conversation = conversation[limit:]
 
-        if mark_read:
-            for message in conversation:
-                if message.sender != user1:
-                    self.mark_as_read(message)
+        for message in conversation:
+            if message.sender==user2 and message.read_at==None:
+                print('got here bitches')
+                self.mark_as_read(message)
 
         return conversation
 
@@ -157,7 +151,6 @@ class MessagingService(object):
         Marks a message as read, if it hasn't been read before
         :param message: Message
         """
-
         if message.read_at is None:
             message.read_at = timezone.now()
             message_read.send(sender=message, from_user=message.sender, to=message.recipient)

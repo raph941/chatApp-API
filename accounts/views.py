@@ -73,6 +73,11 @@ class CustomLoginView(LoginView):
         password = data.get('password')
         user = authenticate(username=username, password=password)
 
+        # username = request.POST.get('username')
+        # password = request.POST.get('password')
+        # import pdb ; pdb.set_trace()
+        # user = authenticate(username=username, password=password)
+
         if user is not None:
             if user.is_active:
                 try:

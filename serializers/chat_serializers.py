@@ -26,7 +26,6 @@ class ConvPartnerSerializer(serializers.Serializer):
         return _obj
 
     def get_lastmsg(self, obj):
-        # import pdb ; pdb.set_trace()
         return self.get_lastmsg_obj(obj).content
 
     def get_lastmsg_date(self, obj):
@@ -34,7 +33,6 @@ class ConvPartnerSerializer(serializers.Serializer):
 
     def get_unread_count(self, obj):
         user = self.context.get('request').user
-        # import pdb ; pdb.set_trace()
         return MessagingService.get_unread_btw_users(user, obj)
 
 
