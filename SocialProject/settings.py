@@ -85,7 +85,7 @@ TEMPLATES = [
 
 
 WSGI_APPLICATION = 'SocialProject.wsgi.application'
-ASGI_APPLICATION = "SocialProject.router.application"
+ASGI_APPLICATION = "SocialProject.routing.application"
 
 
 # Database
