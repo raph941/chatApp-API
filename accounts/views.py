@@ -16,8 +16,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.db.models.functions import Concat
 from django.db.models import Q
 from django.db.models import Value as V
-
+import logging
 import json
+
+logger = logging.getLogger(__name__)
 
 
 class usersListView(ListCreateAPIView):
@@ -81,7 +83,10 @@ class CustomLoginView(LoginView):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
+        # import pdb ; pdb.set_trace()
+        logger.warning("THE THRESHING FLOOR")
         if user is not None:
+            logger.info("USER WAS AUTHENTICATD SUCCESSFULLY")
             if user.is_active:
                 try:
                     token = Token.objects.get(user=user)
@@ -89,9 +94,9 @@ class CustomLoginView(LoginView):
                     token = Token.objects.create(user=user)
                 data = {'id':user.id, 'username':user.username, 'email': user.email, 'fullname': user.fullname, 'image_url': user.image_url, 'token':token.key}
                 # import pdb ; pdb.set_trace()
-                print(data)
                 return JsonResponse(status=200, data=data)
             else:               
                 return JsonResponse(status=400 , data={'message':'your account is inactive, verify your email address or contact support'})
         else:
+            logger.info("USER AUTHENTICATION FAILED")
             return JsonResponse(status=400 , data={'message':'incorrect credentials provided, try again'})

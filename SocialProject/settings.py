@@ -186,3 +186,37 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# logger config
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': './debug.log',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'INFO'
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+            'formaters': 'simple'
+        },
+    },
+}
