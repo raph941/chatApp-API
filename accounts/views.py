@@ -32,7 +32,8 @@ class usersListView(ListCreateAPIView):
         # import pdb ; pdb.set_trace()
         username = serializer.validated_data.get('username')
         password = serializer.validated_data.get('password')
-        User.objects.create_user(username=username, password=password)    
+        fullname = serializer.validated_data.get('fullname')
+        User.objects.create_user(username=username, fullname=fullname, password=password)    
 
 class searchUserView(ListAPIView):
     '''gets a list of user, or create a new user''' 
@@ -74,18 +75,10 @@ class CustomLoginView(LoginView):
         return super(LoginView, self).dispatch(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
-        
         data = json.loads(request.body.decode())
         username = data.get('username')
         password = data.get('password')
         user = authenticate(username=username, password=password)
-
-        # username = request.POST.get('username')
-        # password = request.POST.get('password')
-        # logger.info("username: ", username)
-        # logger.info("password: ", password)
-        # import pdb ; pdb.set_trace()
-        # user = authenticate(username=username, password=password)
 
         if user is not None:
             logger.info("USER WAS AUTHENTICATD SUCCESSFULLY")
@@ -94,7 +87,7 @@ class CustomLoginView(LoginView):
                     token = Token.objects.get(user=user)
                 except:
                     token = Token.objects.create(user=user)
-                data = {'id':user.id, 'username':user.username, 'email': user.email, 'fullname': user.fullname, 'image_url': user.image_url, 'token':token.key}
+                data = {'id':user.id, 'username':user.username, 'email': user.email, 'fullname': user.fullname, 'initials': user.initials, 'token':token.key}
                 # import pdb ; pdb.set_trace()
                 return JsonResponse(status=200, data=data)
             else:               

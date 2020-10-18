@@ -102,6 +102,6 @@ class ConversationTestCase(TestCase):
         self.assertEqual(unread_messages_after.count(), 0)
 
         conversation_limited = MessagingService.get_conversation(self.u1, self.u2, limit=2, reversed=True)
-        self.assertEqual(conversation_limited.count(), 2)
+        self.assertEqual(len(conversation_limited), 2)
 
         self.assertEqual(conversation[0].content, "This is a message to User 2")

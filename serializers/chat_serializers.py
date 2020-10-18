@@ -4,17 +4,18 @@ from chat.apps import MessagingService
 
 
 class ChatUserSerializer(serializers.ModelSerializer):
+    initials = serializers.ReadOnlyField()
 
     class Meta:
         model = User
-        fields = ('username', 'fullname', 'image_url',)
+        fields = ('username', 'fullname', 'initials')
 
 
 class ConvPartnerSerializer(serializers.Serializer):
     id               = serializers.IntegerField()
     username         = serializers.CharField(max_length=350)
     fullname         = serializers.CharField(max_length=350)
-    image_url        = serializers.CharField()
+    initials         = serializers.CharField()
     email            = serializers.EmailField()
     lastmsg          = serializers.SerializerMethodField()
     lastmsg_date     = serializers.SerializerMethodField()

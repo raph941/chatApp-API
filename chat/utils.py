@@ -54,7 +54,6 @@ class MessagingService(object):
         :param user1, user2: User
         """
         count = Message.objects.filter(sender=user2, recipient=user1, read_at=None).count()
-        print('hrer')
         return count
 
 
@@ -92,6 +91,9 @@ class MessagingService(object):
         :param user: User
         :return: Conversation list
         """
+        if type(user) == int:
+            user = User.objects.get(pk=user)
+
         all_conversations = Message.objects.all().filter(Q(sender=user) | Q(recipient=user))
 
         contacts = []
@@ -121,7 +123,7 @@ class MessagingService(object):
         return room
     
 
-    def get_conversation(self, user1, user2, limit=None, reversed=False):
+    def get_conversation(self, user1, user2, limit=50, reversed=False):
         """
         List of messages between two users
         :param user1: User
@@ -140,13 +142,13 @@ class MessagingService(object):
 
         conversation = Message.objects.filter(sender__in=users, recipient__in=users).order_by(order)
 
-        if limit:
-            # Limit number of messages to the x newest
-            conversation = conversation[limit:]
-
         for message in conversation:
             if message.sender==user2 and message.read_at==None:
                 self.mark_as_read(message)
+
+        if len(conversation) > limit:
+            starting_point = len(conversation) - limit
+            conversation = conversation[starting_point:]
 
         return conversation
 

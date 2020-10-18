@@ -26,29 +26,31 @@ class ChatConsumer(SyncConsumer):
 
     def websocket_receive(self, event):
         """event triggered when a message is sent to the socket"""
-
         text_data = event.get('text', None)
         data_json = json.loads(text_data)
+        print('RECIEVED AN EVENT: ', data_json)
         _type = data_json.get('type')
+        
+        if _type == 'INITIAL_SETUP':
+            self.handleMultiGroupAdd(data_json.get('payload'))
+            return
+        
         data = data_json.get('payload')
-        room = self.get_conv_room(data.get('uid1'), data.get('uid2'))
-        self.chat_room_name = f'chat_{room.id}'
+        message, created = self.send_msg(data.get('uid1'), data.get('uid2'), data.get('message'))
+        serialized_data = self.serialize(message)
 
-        if _type == START_CHAT: 
-            self.handleGroupAdd(data.get('uid1'), data.get('uid2'))
-        elif _type == SEND_NEW_MESSAGE: 
-            message, created = self.send_msg(data.get('uid1'), data.get('uid2'), data.get('message'))
-            serialized_data = self.serialize(message)
+        # hadle new conversation partners that do not have a conversation group
+        groupname = f'chat_{message.room.id}'
+        if groupname not in self.channel_layer.groups: self.handleUniGroupAdd(groupname)
 
-            # Send message to room group
-            print('here')
-            async_to_sync(self.channel_layer.group_send)(
-                self.chat_room_name,
-                {
-                    'type': 'chat_message',
-                    'message': serialized_data
-                }
-            )
+        # Send message to room group (group represents the two chatting folks)
+        async_to_sync(self.channel_layer.group_send)(
+            groupname,
+            {
+                'type': 'chat_message',
+                'message': serialized_data
+            }
+        )
 
     # Receive message from room group
     def chat_message(self, event):
@@ -62,28 +64,36 @@ class ChatConsumer(SyncConsumer):
 
     
     def send(self, message):
-        """
-        Overrideable/callable-by-subclasses send method.
-        """
+        # import pdb ; pdb.set_trace()
         self.base_send(message)
 
     def websocket_disconnect(self, close_code):
         pass
 
 
-    def handleGroupAdd(self, pk1, pk2):
+    def handleMultiGroupAdd(self, pk):
         """
-        creates channel group for the two users to chat in.
-        pk1, pk2 : integers representing the two user's pk
-        roomid int: chat room
+        creates channel group for a user and all his/her conversation partners
         """
+        partners = Ms.get_conversations(pk)
 
-        # import pdb ; pdb.set_trace()
+        for partner in partners:
+            room = self.get_conv_room(pk, partner.pk)
+            chat_room_name = f'chat_{room.id}'
+
+            async_to_sync(self.channel_layer.group_add)(
+                chat_room_name,
+                self.channel_name
+            )
+    
+    def handleUniGroupAdd(self, groupname):
+        """
+        creates channel group for a user and another user
+        """
         async_to_sync(self.channel_layer.group_add)(
-            self.chat_room_name,
+            groupname,
             self.channel_name
         )
-        print('layer added')
 
 
     def serialize(self, message):
