@@ -182,11 +182,12 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [config('REDIS_URL', 'redis://localhost:6379')],
+            "hosts": [config('REDIS_B_URL', 'redis://localhost:6379')],
         },
         # "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
+
 
 # logger config
 LOGGING = {
