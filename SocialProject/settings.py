@@ -176,13 +176,13 @@ REST_FRAMEWORK = {
 }
 
 # CORS
-CORS_ALLOW_ALL_ORIGINS = True   
+CORS_ALLOW_ALL_ORIGINS = True
 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [config('REDIS_B_URL', 'redis://localhost:6379')],
+            "hosts": [config('REDIS_URL', 'redis://localhost:6379')],
         },
         # "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
