@@ -184,7 +184,7 @@ CHANNEL_LAYERS = {
         # "CONFIG": {
         #     "hosts": ['redis://localhost:6379'],
         # },
-        # "BACKEND": "channels.layers.InMemoryChannelLayer"
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
 
