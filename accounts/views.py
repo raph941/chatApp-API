@@ -33,7 +33,8 @@ class usersListView(ListCreateAPIView):
         username = serializer.validated_data.get('username')
         password = serializer.validated_data.get('password')
         fullname = serializer.validated_data.get('fullname')
-        User.objects.create_user(username=username, fullname=fullname, password=password)    
+        User.objects.create_user(username=username, fullname=fullname, password=password) 
+        logger.info("USER SIGNUP SUCCESSFUL")   
 
 class searchUserView(ListAPIView):
     '''gets a list of user, or create a new user''' 
