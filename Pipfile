@@ -62,11 +62,11 @@ urllib3 = "==1.25.8"
 webencodings = "==0.5.1"
 whitenoise = "==5.2.0"
 "zope.interface" = "==5.1.2"
+http2
+tls
 
 [dev-packages]
 
 [requires]
 python_version = "3.8"
 
-[packages.twisted]
-extras = [ "http2", "tls",]
