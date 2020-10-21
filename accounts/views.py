@@ -29,12 +29,14 @@ class usersListView(ListCreateAPIView):
     lookup_field = 'pk'
 
     def perform_create(self, serializer):
-        # import pdb ; pdb.set_trace()
-        username = serializer.validated_data.get('username')
-        password = serializer.validated_data.get('password')
-        fullname = serializer.validated_data.get('fullname')
-        User.objects.create_user(username=username, fullname=fullname, password=password) 
-        logger.info("USER SIGNUP SUCCESSFUL")   
+        try:
+            username = serializer.validated_data.get('username')
+            password = serializer.validated_data.get('password')
+            fullname = serializer.validated_data.get('fullname')
+            User.objects.create_user(username=username, fullname=fullname, password=password) 
+            logger.info("USER ACCOUNT CREATION SUCCESSFUL")
+        except:
+            logger.info("AN ERROR OCCURED WHILE CREATING USER ACCOUNT")
 
 class searchUserView(ListAPIView):
     '''gets a list of user, or create a new user''' 

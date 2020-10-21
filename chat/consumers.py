@@ -16,9 +16,12 @@ from accounts.models import User
 from .socket_request_types import *
 from channels.consumer import SyncConsumer
 from django.http import JsonResponse
+import logging
+logger = logging.getLogger(__name__)
 
 
 class ChatConsumer(SyncConsumer):
+    current_groups = []
 
     def websocket_connect(self, event):
         """event triggered when connection handshake is succesful"""
@@ -28,7 +31,7 @@ class ChatConsumer(SyncConsumer):
         """event triggered when a message is sent to the socket"""
         text_data = event.get('text', None)
         data_json = json.loads(text_data)
-        print('RECIEVED AN EVENT: ', data_json)
+        logger.info('RECIEVED AN EVENT: ', data_json)
         _type = data_json.get('type')
         
         if _type == 'INITIAL_SETUP':
@@ -41,7 +44,7 @@ class ChatConsumer(SyncConsumer):
 
         # hadle new conversation partners that do not have a conversation group
         groupname = f'chat_{message.room.id}'
-        if groupname not in self.channel_layer.groups: self.handleUniGroupAdd(groupname)
+        if groupname not in self.current_groups: self.handleUniGroupAdd(groupname)
 
         # Send message to room group (group represents the two chatting folks)
         async_to_sync(self.channel_layer.group_send)(
@@ -76,10 +79,10 @@ class ChatConsumer(SyncConsumer):
         creates channel group for a user and all his/her conversation partners
         """
         partners = Ms.get_conversations(pk)
-
         for partner in partners:
             room = self.get_conv_room(pk, partner.pk)
             chat_room_name = f'chat_{room.id}'
+            self.current_groups.append(chat_room_name)
 
             async_to_sync(self.channel_layer.group_add)(
                 chat_room_name,
@@ -90,6 +93,7 @@ class ChatConsumer(SyncConsumer):
         """
         creates channel group for a user and another user
         """
+        self.current_groups.append(groupname)
         async_to_sync(self.channel_layer.group_add)(
             groupname,
             self.channel_name

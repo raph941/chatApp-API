@@ -6,6 +6,9 @@ from .signals import message_read, message_sent
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.db.models import Q
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class MessagingService(object):
@@ -22,6 +25,7 @@ class MessagingService(object):
         :param message: String
         :return: Message and status code
         """
+        logger.info('MessagingService: SENDING NEW MESSAGE')
         if sender == recipient:
             raise ValidationError("You can't send messages to yourself.")
 
@@ -45,6 +49,7 @@ class MessagingService(object):
         :param user: user
         :return: messages
         """
+        logger.info('MessagingService: GETTING UNREAD MESSAGES')
         return Message.objects.all().filter(recipient=user, read_at=None)
 
     def get_unread_btw_users(self, user1, user2):
@@ -53,6 +58,7 @@ class MessagingService(object):
         e.g a user gets the number of unread messages he has recived from another user
         :param user1, user2: User
         """
+        logger.info('MessagingService: FETCHING THE NUMBER OF UNREAD MESSAGES BETWEEN TWO USERS')
         count = Message.objects.filter(sender=user2, recipient=user1, read_at=None).count()
         return count
 
@@ -63,6 +69,7 @@ class MessagingService(object):
         :param message_id: Integer
         :return: Message Text
         """
+        logger.info('MessagingService: MARK SPECIFIC MESSAGE AS READ')
         try:
             message = Message.objects.get(id=message_id)
             self.mark_as_read(message)
@@ -76,6 +83,7 @@ class MessagingService(object):
         :param message_id: Id
         :return: Formatted Message Text
         """
+        logger.info('MessagingService: FORMART MESSAGE')
         try:
             message = Message.objects.get(id=message_id)
             self.mark_as_read(message)
@@ -91,6 +99,7 @@ class MessagingService(object):
         :param user: User
         :return: Conversation list
         """
+        logger.info('MessagingService: GETTING ALL CONVERSATION PARTNERS FOR SPECIFIC USER')
         if type(user) == int:
             user = User.objects.get(pk=user)
 
@@ -113,6 +122,7 @@ class MessagingService(object):
         user1 : int or object
         user2 : int or object
         """
+        logger.info('MessagingService: GETTING CONVERSATION ROOM FOR TWO USERS')
         if type(user1) == int and type(user2) == int:
             u1 = User.objects.get(pk=user1)
             u2 = User.objects.get(pk=user2)
@@ -132,6 +142,7 @@ class MessagingService(object):
         :param reversed: Boolean - Makes the newest message be at index 0
         :return: messages
         """
+        logger.info('MessagingService: GETTING CONVERSATION MESSAGES')
         users = [user1, user2]
 
         # Newest message first if it's reversed (index 0)
@@ -158,6 +169,7 @@ class MessagingService(object):
         Marks a message as read, if it hasn't been read before
         :param message: Message
         """
+        logger.info('MessagingService: MARK MESSAGE OBJECT AS READ')
         if message.read_at is None:
             message.read_at = timezone.now()
             message_read.send(sender=message, from_user=message.sender, to=message.recipient)
@@ -169,6 +181,7 @@ class MessagingService(object):
         :param user1: User
         :param user2: User
         """
+        logger.info('MessagingService: GETTING LAST MESSAGE BETWEEN TWO USERS')
         users = [user1, user2]
         conversation = Message.objects.all().filter(sender__in=users, recipient__in=users)
         return conversation.last()

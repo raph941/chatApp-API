@@ -6,6 +6,10 @@ from rest_framework.renderers import JSONRenderer
 from django.http import JsonResponse
 from chat.apps import MessagingService
 from accounts.models import User
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class ConvPartnerView(ListAPIView):
     """ Returns a list people a user has made a conversation with """
@@ -14,8 +18,8 @@ class ConvPartnerView(ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        query = MessagingService.get_conversations(self.request.user)
-        return query
+        try: return MessagingService.get_conversations(self.request.user) 
+        except: pass        
 
 
 class ConvMessageView(ListAPIView):
@@ -28,6 +32,6 @@ class ConvMessageView(ListAPIView):
         other_guy_id    = self.kwargs.get('pk') 
         other_guy       = User.objects.get(pk=int(other_guy_id))
         me              = self.request.user
-        # import pdb ; pdb.set_trace()
-        query = MessagingService.get_conversation(me, other_guy, limit=50)
-        return query
+        try: return MessagingService.get_conversation(me, other_guy, limit=50)
+        except: logger.info('UNABLE TO GET CONVERSATION MESSAGES BETWEEN', me, 'AND', other_guy)
+        
