@@ -132,3 +132,5 @@ venv
 .env.prod.db
 .circleci-temp
 debug.log
+Docker-compose.prod.yml
+Dockerfile.prod
