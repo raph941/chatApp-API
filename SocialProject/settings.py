@@ -44,9 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'channels',
-
+    'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
+    # project apps
     'accounts',
     'chat',
 ]

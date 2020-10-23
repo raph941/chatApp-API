@@ -1,21 +1,26 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404, render
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView
-from serializers.user_serializer import UsersSerializer, UserSerializer
-from accounts.models import User
-from django.contrib.auth.views import LoginView
-from django.contrib.auth import authenticate, login
-from rest_framework.response import Response
 from django.http import JsonResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.authtoken.models import Token
-from rest_framework import views
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from django_filters import rest_framework as filters
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import authenticate, login
 from django.db.models.functions import Concat
 from django.db.models import Q
 from django.db.models import Value as V
+
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView
+from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
+from serializers.user_serializer import UsersSerializer, UserSerializer
+from accounts.models import User
+from filters.filter import UserSearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
+
 import logging
 import json
 
@@ -30,9 +35,9 @@ class usersListView(ListCreateAPIView):
 
     def perform_create(self, serializer):
         try:
-            username = serializer.validated_data.get('username')
-            password = serializer.validated_data.get('password')
-            fullname = serializer.validated_data.get('fullname')
+            username    = serializer.validated_data.get('username')
+            password    = serializer.validated_data.get('password')
+            fullname    = serializer.validated_data.get('fullname')
             User.objects.create_user(username=username, fullname=fullname, password=password) 
             logger.info("USER ACCOUNT CREATION SUCCESSFUL")
         except:
@@ -40,29 +45,32 @@ class usersListView(ListCreateAPIView):
 
 class searchUserView(ListAPIView):
     '''gets a list of user, or create a new user''' 
-    permission_classes = (IsAuthenticated,)
-    serializer_class = UsersSerializer
+    permission_classes  = (AllowAny,)
+    serializer_class    = UsersSerializer
+    queryset            = User.objects.all()
+    filter_backends     = (DjangoFilterBackend,)
+    filterset_class     = UserSearchFilter
 
-    def get_queryset(self):
-        """
-        Get the list of items for this view.
-        """
-        query = self.request.GET.get('query')
-        if query is not None:
-            or_lookup_name = (
-                Q(username__icontains=query) |
-                Q(fullname__icontains=query)
-            )
-            queryset = User.objects.filter(or_lookup_name)
-            return queryset
+    # def get_queryset(self):
+    #     """
+    #     Get the list of items for this view.
+    #     """
+    #     query = self.request.GET.get('query')
+    #     if query is not None:
+    #         or_lookup_name = (
+    #             Q(username__icontains=query) |
+    #             Q(fullname__icontains=query)
+    #         )
+    #         queryset       = User.objects.filter(or_lookup_name)
+    #         return queryset
             
-        return User.objects.none() 
+    #     return User.objects.none() 
 
 
 class userView(RetrieveUpdateDestroyAPIView):
     ''' View for managing specific user '''
-    permission_classes = (IsAuthenticated,)
-    serializer_class = UserSerializer
+    permission_classes      = (IsAuthenticated,)
+    serializer_class        = UserSerializer
 
     def get_object(self):
         return self.request.user
