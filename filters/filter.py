@@ -1,5 +1,5 @@
 import django_filters
-from django_filters.groups import CombinedGroup
+# # from django_filters.groups import CombinedGroup
 from accounts.models import User
 
 
