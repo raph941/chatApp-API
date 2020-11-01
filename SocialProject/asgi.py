@@ -13,4 +13,4 @@ from channels.routing import get_default_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "SocialProject.settings")
 django.setup()
-app = get_default_application()
+application = get_default_application()
