@@ -20,7 +20,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ChatConsumer(SyncConsumer):
+class ChatConsumer(WebsocketConsumer):
     current_groups = []
 
     def websocket_connect(self, event):
