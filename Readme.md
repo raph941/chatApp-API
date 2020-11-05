@@ -43,7 +43,7 @@ Follow these instructions, to get a copy and run on your PC
 
 2. Setup `pipenv` and Python dependencies:
 
-   ```shell
+   ```
    pip install --user pipenv
    pipenv --python 3.6
    pipenv shell
@@ -51,17 +51,15 @@ Follow these instructions, to get a copy and run on your PC
 
    After successful setup, a prefix `(env_name)` should appear on the left of your terminal.
 
-   ```
-   (env) C:\Users\User\SpongyBob\Projects\seasonalife> 
-   ```
 3. Install Project Dependencies
-  ```shell
-  pipenv install (if you are using pipenv)
-  or
-  pip install -r requirements.txt
+    ```
+    pipenv install (if you are using pipenv)
+    or
+    pip install -r requirements.txt
+    ```
 
-4. Create the environment file `.env` on the root directory
-  Use this as an example (do not copy😀):
+4. Create the environment file `.env` on the root directory Use this as an example (do not copy😀):
+    ```
     SECRET_KEY=choose-a-secreat-key
     DEBUG=True
     ALLOWED_HOSTS = *
@@ -73,16 +71,14 @@ Follow these instructions, to get a copy and run on your PC
     SQL_PORT=5432
     REDIS_URL = 'redis://localhost:6379'
     DATABASE_URL = 'your-database-url-here'
-  
+    ```
+
 5. Create Migrations: this sets up your database with all the necessary tables needed for the app to run
-
-```
-shell
-python manage.py makemigrations
-python manage.py migrate
-
+    ```
+    python manage.py makemigrations
+    python manage.py migrate
+    ```
 6. Run the app
-
-```
-shell
-python manage.py runserver
+    ```
+    python manage.py runserver
+    ```
