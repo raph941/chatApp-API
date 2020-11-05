@@ -64,6 +64,7 @@ whitenoise = "==5.2.0"
 "zope.interface" = "==5.1.2"
 django-filter = "*"
 asgi-cors = "*"
+drf-yasg = "*"
 
 [dev-packages]
 

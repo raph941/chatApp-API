@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
+    # API documentation
+    'drf_yasg',
     # project apps
     'accounts',
     'chat',
