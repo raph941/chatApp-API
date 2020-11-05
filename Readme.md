@@ -1,3 +1,4 @@
+[![Status](https://img.shields.io/website-up-down-green-red/https/chatapp-be-api.herokuapp.com//health.svg)](https://chatapp-be-api.herokuapp.com/)
 [![Python Version](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/)
 [![Django Version](https://img.shields.io/badge/django%20versions-3.0-blue.svg)](https://www.djangoproject.com/)
 [![Made with React](https://img.shields.io/badge/made%20with-React-orange.svg)](https://reactjs.org/)
