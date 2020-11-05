@@ -1,4 +1,3 @@
-[![Status](https://img.shields.io/website-up-down-green-red/https/www.chatapp-be-api.herokuapp.com/health.svg)](https://chatapp-be-api.herokuapp.com/)
 [![Python Version](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/)
 [![Django Version](https://img.shields.io/badge/django%20versions-3.0-blue.svg)](https://www.djangoproject.com/)
 [![Made with React](https://img.shields.io/badge/made%20with-React-orange.svg)](https://reactjs.org/)
@@ -15,6 +14,22 @@ Follow these instructions, to get a copy and run on your PC
 1. A Computer (😀😁)
 2. Virtual Environment Installed (recommended not compulsory)
 3. Pyhthon 3.8 installed globaly or within the VirtualEnv
+
+
+### Environmental Variables
+
+| Name | Required | Value |
+|------|----------|---------|
+| `SECRET_KEY` | :heavy_check_mark: | String, standard Django setting |
+| `ALLOWED_HOSTS` | :heavy_check_mark: | `localhost` |
+| `DEBUG` | :heavy_check_mark: | Boolean, standard Django setting |
+| `DATABASE_URL` | :x: | standard Django setting |
+| `SQL_ENGINE` | :heavy_check_mark: | standard Django setting |
+| `SQL_DATABASE` | :heavy_check_mark: | standard Django setting |
+| `SQL_USER` | :heavy_check_mark: | standard Django setting |
+| `SQL_PASSWORD` | :heavy_check_mark: | standard Django setting |
+| `SQL_HOST` | :heavy_check_mark: | standard Django setting |
+| `REDIS_URL` | :heavy_check_mark: | standard Django setting |
 
 #### Frontend
 
@@ -46,25 +61,7 @@ Follow these instructions, to get a copy and run on your PC
   pip install -r requirements.txt
 
 4. Create the environment file `.env` on the root directory
-
-    ### Environmental Variables
-
-| Name | Required | Value |
-|------|----------|---------|
-| `SECRET_KEY` | :heavy_check_mark: | String, standard Django setting |
-| `ALLOWED_HOSTS` | :heavy_check_mark: | `localhost` |
-| `DEBUG` | :heavy_check_mark: | Boolean, standard Django setting |
-| `DATABASE_URL` | :x: | standard Django setting |
-| `SQL_ENGINE` | :heavy_check_mark: | standard Django setting |
-| `SQL_DATABASE` | :heavy_check_mark: | standard Django setting |
-| `SQL_USER` | :heavy_check_mark: | standard Django setting |
-| `SQL_PASSWORD` | :heavy_check_mark: | standard Django setting |
-| `SQL_HOST` | :heavy_check_mark: | standard Django setting |
-| `REDIS_URL` | :heavy_check_mark: | standard Django setting |
-
-Use this as an example (do not copy😀):
-
-  ```   
+  Use this as an example (do not copy😀):
     SECRET_KEY=choose-a-secreat-key
     DEBUG=True
     ALLOWED_HOSTS = *
