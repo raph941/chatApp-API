@@ -28,6 +28,7 @@ class ChatConsumer(WebsocketConsumer):
         self.send({'type': 'websocket.accept'})
 
     def websocket_receive(self, event):
+        print('WEBSOCKET RECIEVE CALLED')
         """event triggered when a message is sent to the socket"""
         text_data = event.get('text', None)
         data_json = json.loads(text_data)
@@ -35,6 +36,7 @@ class ChatConsumer(WebsocketConsumer):
         _type = data_json.get('type')
         
         if _type == 'INITIAL_SETUP':
+            print('INITIAL SETUP CALL')
             self.handleMultiGroupAdd(data_json.get('payload'))
             return
         
@@ -45,7 +47,7 @@ class ChatConsumer(WebsocketConsumer):
         # hadle new conversation partners that do not have a conversation group
         groupname = f'chat_{message.room.id}'
         if groupname not in self.current_groups: self.handleUniGroupAdd(groupname)
-
+        print('HERE')
         # Send message to room group (group represents the two chatting folks)
         async_to_sync(self.channel_layer.group_send)(
             groupname,
@@ -57,17 +59,16 @@ class ChatConsumer(WebsocketConsumer):
 
     # Receive message from room group
     def chat_message(self, event):
-        # import pdb ; pdb.set_trace()
+        print('CHAT MESSAGE CALLED')
         message = json.dumps(event.get('message'))
-
         self.send({
             "type": "websocket.send",
             "text": message
         })
 
     
-    def send(self, message):
-        # import pdb ; pdb.set_trace()
+    def send(self, message): 
+        print('SEND CALLED')       
         self.base_send(message)
 
     def websocket_disconnect(self, close_code):
